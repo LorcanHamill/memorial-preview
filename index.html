@@ -8,9 +8,9 @@
   body { font-family: sans-serif; text-align: center; background: #f9f9f9; color: #333; margin:0; padding:0; }
   h1 { font-size: 1.5em; margin: 10px 0; }
 
-  /* Container centers the image but doesn't clip it */
   #photo-container {
-    width: 100%;
+    width: 90%;
+    max-height: 60vh; /* leaves ~40% of viewport for buttons, thumbnails, text */
     margin: 15px auto;
     display: flex;
     justify-content: center;
@@ -18,11 +18,11 @@
   }
 
   #main-photo {
-    max-width: 90vw;  /* max 90% of viewport width */
-    max-height: 90vh; /* max 90% of viewport height */
+    max-width: 100%;
+    max-height: 100%;
     width: auto;
     height: auto;
-    object-fit: contain;  /* preserves aspect ratio */
+    object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     display: block;

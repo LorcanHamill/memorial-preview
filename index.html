@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Memorial Photo Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { font-family: sans-serif; text-align: center; background: #f9f9f9; color: #333; margin:0; padding:0; }
+  h1 { font-size: 1.5em; margin: 10px 0; }
+  #photo-container { margin: 15px auto; max-width: 95%; }
+  #main-photo { width: 100%; height: auto; max-height: 60vh; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); touch-action: pan-y; }
+  .nav-buttons { margin: 10px 0; }
+  button { padding: 12px 20px; font-size: 16px; margin: 5px; cursor: pointer; border-radius:4px; }
+  #photo-number { margin-top: 8px; font-weight: bold; font-size: 16px; }
+  #feedback-msg { margin: 15px auto; font-size: 14px; color: #555; max-width: 90%; }
+  #jump-container { margin: 10px; }
+  #jumpInput { width: 70px; font-size: 16px; padding: 4px; border-radius:4px; }
+  #thumbnails { display: flex; flex-wrap: wrap; justify-content: center; margin: 15px auto; max-width: 95%; max-height: 250px; overflow-y: auto; }
+  #thumbnails img { width: 50px; height: 50px; object-fit: cover; margin: 3px; cursor: pointer; border: 2px solid transparent; border-radius: 4px; touch-action: manipulation; }
+  #thumbnails img.active { border-color: #333; }
+</style>
+</head>
+<body>
+
+<h1>Memorial Photo Preview</h1>
+
+<div id="photo-container">
+  <img id="main-photo" src="" alt="Photo">
+  <div id="photo-number"></div>
+</div>
+
+<div class="nav-buttons">
+  <button onclick="prevPhoto()">Previous</button>
+  <button onclick="nextPhoto()">Next</button>
+</div>
+
+<div id="jump-container">
+  <input id="jumpInput" type="number" placeholder="Photo #">
+  <button onclick="jumpToPhoto()">Go</button>
+</div>
+
+<div id="feedback-msg">
+  Please review the photos and send feedback referencing the photo number (e.g., “Photo 052 should move after 075”).
+</div>
+
+<div id="thumbnails"></div>
+
+<!-- Load the array of photos -->
+<script src="photos.js"></script>
+
+<script>
+const imageFolder = "images/";
+let currentIndex = 0;
+const mainPhoto = document.getElementById('main-photo');
+const photoNumber = document.getElementById('photo-number');
+const thumbnailsContainer = document.getElementById('thumbnails');
+
+// Create thumbnail images dynamically
+photos.forEach((filename, index) => {
+  const thumb = document.createElement('img');
+  thumb.src = imageFolder + filename;
+  thumb.alt = "Photo " + filename;
+  thumb.onclick = () => showPhoto(index);
+  thumbnailsContainer.appendChild(thumb);
+});
+
+function showPhoto(index) {
+  if (index < 0) index = 0;
+  if (index >= photos.length) index = photos.length - 1;
+  currentIndex = index;
+  mainPhoto.src = imageFolder + photos[currentIndex];
+  photoNumber.textContent = "Photo " + photos[currentIndex];
+
+  // Highlight active thumbnail
+  const thumbs = thumbnailsContainer.querySelectorAll('img');
+  thumbs.forEach((img, i) => img.classList.toggle('active', i === currentIndex));
+}
+
+function prevPhoto() { showPhoto(currentIndex - 1); }
+function nextPhoto() { showPhoto(currentIndex + 1); }
+
+function jumpToPhoto() {
+  const n = parseInt(document.getElementById('jumpInput').value);
+  if (!isNaN(n)) {
+    const index = photos.findIndex(p => p.includes(String(n).padStart(3,'0')));
+    if (index >= 0) showPhoto(index);
+  }
+}
+
+// Show first photo initially
+showPhoto(0);
+
+/* ===== Swipe support for mobile ===== */
+let touchStartX = 0;
+let touchEndX = 0;
+
+mainPhoto.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, false);
+
+mainPhoto.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+}, false);
+
+function handleSwipe() {
+  const diff = touchEndX - touchStartX;
+  if (Math.abs(diff) > 50) { // swipe threshold
+    if (diff > 0) prevPhoto(); // swipe right → previous
+    else nextPhoto();          // swipe left → next
+  }
+}
+</script>
+
+</body>
+</html>
+

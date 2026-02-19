@@ -7,16 +7,56 @@
 <style>
   body { font-family: sans-serif; text-align: center; background: #f9f9f9; color: #333; margin:0; padding:0; }
   h1 { font-size: 1.5em; margin: 10px 0; }
-  #photo-container { margin: 15px auto; max-width: 95%; }
-  #main-photo { width: 100%; height: auto; max-height: 60vh; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); touch-action: pan-y; }
+
+  /* Container ensures image scales properly */
+  #photo-container {
+    width: 90%;
+    max-height: 60vh;
+    margin: 15px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* clip if image is taller than container */
+  }
+
+  #main-photo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;  /* preserves aspect ratio */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
   .nav-buttons { margin: 10px 0; }
   button { padding: 12px 20px; font-size: 16px; margin: 5px; cursor: pointer; border-radius:4px; }
+
   #photo-number { margin-top: 8px; font-weight: bold; font-size: 16px; }
   #feedback-msg { margin: 15px auto; font-size: 14px; color: #555; max-width: 90%; }
+
   #jump-container { margin: 10px; }
   #jumpInput { width: 70px; font-size: 16px; padding: 4px; border-radius:4px; }
-  #thumbnails { display: flex; flex-wrap: wrap; justify-content: center; margin: 15px auto; max-width: 95%; max-height: 250px; overflow-y: auto; }
-  #thumbnails img { width: 50px; height: 50px; object-fit: cover; margin: 3px; cursor: pointer; border: 2px solid transparent; border-radius: 4px; touch-action: manipulation; }
+
+  #thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 15px auto;
+    max-width: 95%;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  #thumbnails img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    touch-action: manipulation;
+  }
+
   #thumbnails img.active { border-color: #333; }
 </style>
 </head>
@@ -26,8 +66,9 @@
 
 <div id="photo-container">
   <img id="main-photo" src="" alt="Photo">
-  <div id="photo-number"></div>
 </div>
+
+<div id="photo-number"></div>
 
 <div class="nav-buttons">
   <button onclick="prevPhoto()">Previous</button>
@@ -55,7 +96,7 @@ const mainPhoto = document.getElementById('main-photo');
 const photoNumber = document.getElementById('photo-number');
 const thumbnailsContainer = document.getElementById('thumbnails');
 
-// Create thumbnail images dynamically
+// Create thumbnails dynamically
 photos.forEach((filename, index) => {
   const thumb = document.createElement('img');
   thumb.src = imageFolder + filename;

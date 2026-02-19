@@ -5,38 +5,78 @@
 <title>Memorial Photo Preview</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body { font-family: sans-serif; text-align: center; background: #f9f9f9; color: #333; margin:0; padding:0; }
-  h1 { font-size: 1.5em; margin: 10px 0; }
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
 
+  h1 {
+    font-size: 1.5em;
+    margin: 10px 0;
+  }
+
+  /* Container for main photo - centers image */
   #photo-container {
-    width: 90%;
-    max-height: 60vh; /* leaves ~40% of viewport for buttons, thumbnails, text */
-    margin: 15px auto;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 15px 0;
   }
 
   #main-photo {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
+    max-width: 100%;   /* never wider than viewport */
+    max-height: 60vh;  /* never taller than 60% of viewport */
+    width: auto;       /* scale proportionally */
+    height: auto;      /* scale proportionally */
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     display: block;
   }
 
-  .nav-buttons { margin: 10px 0; }
-  button { padding: 12px 20px; font-size: 16px; margin: 5px; cursor: pointer; border-radius:4px; }
+  /* Navigation buttons */
+  .nav-buttons {
+    margin: 10px 0;
+  }
 
-  #photo-number { margin-top: 8px; font-weight: bold; font-size: 16px; }
-  #feedback-msg { margin: 15px auto; font-size: 14px; color: #555; max-width: 90%; }
+  button {
+    padding: 12px 20px;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
 
-  #jump-container { margin: 10px; }
-  #jumpInput { width: 70px; font-size: 16px; padding: 4px; border-radius:4px; }
+  #photo-number {
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 16px;
+  }
 
+  #feedback-msg {
+    margin: 15px auto;
+    font-size: 14px;
+    color: #555;
+    max-width: 90%;
+  }
+
+  #jump-container {
+    margin: 10px;
+  }
+
+  #jumpInput {
+    width: 70px;
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 4px;
+  }
+
+  /* Thumbnails */
   #thumbnails {
     display: flex;
     flex-wrap: wrap;
@@ -58,12 +98,21 @@
     touch-action: manipulation;
   }
 
-  #thumbnails img.active { border-color: #333; }
+  #thumbnails img.active {
+    border-color: #333;
+  }
+
+  /* Mobile tweak: allow slightly taller images */
+  @media (max-width: 768px) {
+    #main-photo {
+      max-height: 70vh;
+    }
+  }
 </style>
 </head>
 <body>
 
-<h1>Memorial Photo Preview</h1>
+<h1>Memorial Photo Preview - 2</h1>
 
 <div id="photo-container">
   <img id="main-photo" src="" alt="Photo">
@@ -87,7 +136,7 @@
 
 <div id="thumbnails"></div>
 
-<!-- Load the array of photos -->
+<!-- Load photo list -->
 <script src="photos.js"></script>
 
 <script>
@@ -132,7 +181,7 @@ function jumpToPhoto() {
 // Show first photo initially
 showPhoto(0);
 
-/* ===== Swipe support for mobile ===== */
+/* Swipe support for mobile */
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -148,8 +197,8 @@ mainPhoto.addEventListener('touchend', e => {
 function handleSwipe() {
   const diff = touchEndX - touchStartX;
   if (Math.abs(diff) > 50) { // swipe threshold
-    if (diff > 0) prevPhoto(); // swipe right → previous
-    else nextPhoto();          // swipe left → next
+    if (diff > 0) prevPhoto();
+    else nextPhoto();
   }
 }
 </script>
